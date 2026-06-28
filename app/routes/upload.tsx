@@ -4,7 +4,7 @@ import FileUploader from "~/components/FileUploader";
 import {usePuterStore} from "~/lib/puter";
 import {useNavigate} from "react-router";
 import {convertPdfToImage} from "~/lib/pdf2img";
-import {generateUUID} from "~/lib/utils";
+import {generateUUID, parseFeedback} from "~/lib/utils";
 import {prepareInstructions} from "../../constants";
 
 const Upload = () => {
@@ -35,7 +35,15 @@ const Upload = () => {
 
         setStatusText('Preparing data...');
         const uuid = generateUUID();
-        const data = {
+        const data: {
+            id: string;
+            resumePath: string;
+            imagePath: string;
+            companyName: string;
+            jobTitle: string;
+            jobDescription: string;
+            feedback: Feedback | '';
+        } = {
             id: uuid,
             resumePath: uploadedFile.path,
             imagePath: uploadedImage.path,
@@ -56,7 +64,14 @@ const Upload = () => {
             ? feedback.message.content
             : feedback.message.content[0].text;
 
-        data.feedback = JSON.parse(feedbackText);
+        const parsedFeedback = parseFeedback(feedbackText);
+        if (!parsedFeedback) {
+            console.error('Could not parse AI feedback:', feedbackText);
+            setIsProcessing(false);
+            return setStatusText('Error: Could not read the analysis. Please try again.');
+        }
+
+        data.feedback = parsedFeedback;
         await kv.set(`resume:${uuid}`, JSON.stringify(data));
         setStatusText('Analysis complete, redirecting...');
         console.log(data);
