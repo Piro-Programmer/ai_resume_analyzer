@@ -20,3 +20,27 @@ export function formatSize(bytes: number): string {
 
 export const generateUUID = () => crypto.randomUUID();
 
+// The model is asked for raw JSON, but it sometimes wraps the object in
+// ```json fences or adds stray text. Strip that and parse only the object so
+// a slightly-off response can't crash analysis or silently yield 0 scores.
+export function parseFeedback(text: string): Feedback | null {
+  if (!text) return null;
+
+  let cleaned = text.trim();
+
+  const fenceMatch = cleaned.match(/```(?:json)?\s*([\s\S]*?)```/i);
+  if (fenceMatch) cleaned = fenceMatch[1].trim();
+
+  const start = cleaned.indexOf('{');
+  const end = cleaned.lastIndexOf('}');
+  if (start !== -1 && end !== -1 && end > start) {
+    cleaned = cleaned.slice(start, end + 1);
+  }
+
+  try {
+    return JSON.parse(cleaned) as Feedback;
+  } catch {
+    return null;
+  }
+}
+
