@@ -352,8 +352,8 @@ export const usePuterStore = create<PuterStore>((set, get) => {
             ],
             // gpt-5-nano is a text-only model and cannot read the PDF attached
             // via puter_path, which made it return all-zero scores. Use a
-            // document-capable model so the resume content is actually analyzed.
-            { model: "claude-3-7-sonnet" }
+            // document-capable Claude model so the resume is actually analyzed.
+            { model: "claude-sonnet-4-6" }
         ) as Promise<AIResponse | undefined>;
     };
 
