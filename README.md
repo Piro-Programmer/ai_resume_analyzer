@@ -25,9 +25,7 @@
 **AI Resume Analyzer** is a full-stack, AI-powered ATS that helps candidates understand exactly how well their resume matches a target role — before a recruiter ever sees it. A user uploads a resume, pastes a job listing, and receives an ATS compatibility score alongside specific, actionable feedback.
  
 The entire application runs **without a traditional backend**. Authentication, file storage, and AI inference are handled client-side through the Puter.js serverless SDK, making the app cheap to run, fast to deploy, and simple to reason about.
- 
-> **Note on origins:** This project was built on the foundation of a JavaScript Mastery tutorial as a hands-on exercise in end-to-end AI integration and modern serverless React. It served as a base for exploring production concerns — deployment, containerization, and clean component architecture.
- 
+
 ---
  
 ## Live Demo
